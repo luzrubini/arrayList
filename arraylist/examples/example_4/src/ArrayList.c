@@ -136,7 +136,7 @@ void* al_get(ArrayList* this, int index)
     int tamano;
     if(this!=NULL)
     {
-        tamano=this->size;
+        tamano=al_len(this);
         if(index>=0&&index<tamano)
         {
             returnAux=this->pElements[index];
@@ -163,7 +163,7 @@ int al_contains(ArrayList* this, void* pElement)
     if(this!=NULL&&pElement!=NULL)
     {
         returnAux=0;
-        tamano=this->size;
+        tamano=al_len(this);
         for(i=0;i<tamano;i++)
         {
             if(this->pElements[i]==pElement)
@@ -194,7 +194,7 @@ int al_set(ArrayList* this, int index,void* pElement)
     int tamano;
     if(this!=NULL&&pElement!=NULL)
     {
-        tamano=this->size;
+        tamano=al_len(this);
         if(index<=tamano&&index>=0)
         {
             if(index==tamano)
@@ -251,7 +251,7 @@ int al_clear(ArrayList* this)
     int tamano;
     if(this!=NULL)
     {
-        tamano=this->size;
+        tamano=al_len(this);
         for(i=0;i<tamano;i++)
         {
             free(this->pElements);
@@ -278,7 +278,7 @@ ArrayList* al_clone(ArrayList* this)
     if(this!=NULL)
     {
         returnAux=al_newArrayList();
-        tam=this->size;
+        tam=al_len(this);
         if(returnAux!=NULL)
         {
             for(i=0;i<tam;i++)
@@ -309,7 +309,7 @@ int al_push(ArrayList* this, int index, void* pElement)
     int tamano;
     if(this!=NULL&&pElement!=NULL)
     {
-        tamano=this->size;
+        tamano=al_len(this);
         if(index<tamano&&index>=0)
         {
            aux=expand(this,index);
@@ -318,6 +318,10 @@ int al_push(ArrayList* this, int index, void* pElement)
                 al_set(this,index,pElement);
                 returnAux=0;
            }
+        }
+        if(index==tamano)
+        {
+            al_add(this,pElement);
         }
 
     }
@@ -339,7 +343,7 @@ int al_indexOf(ArrayList* this, void* pElement)
     int tamano;
     if(this!=NULL&&pElement!=NULL)
     {
-        tamano=this->size;
+        tamano=al_len(this);
         for(i=0;i<tamano;i++)
         {
             if(pElement==this->pElements[i])
@@ -391,7 +395,7 @@ void* al_pop(ArrayList* this,int index)
     int tamano;
     if(this!=NULL)
     {
-        tamano=this->size;
+        tamano=al_len(this);
         if(index>=0&&index<=tamano)
         {
             returnAux=al_get(this,index);
@@ -456,8 +460,24 @@ ArrayList* al_subList(ArrayList* this,int from,int to)
  */
 int al_containsAll(ArrayList* this,ArrayList* this2)
 {
-    int returnAux = -1;
+    int returnAux=-1;
+    int aux;
+    int i;
+    int tamAL2;
     if(this!=NULL&&this2!=NULL)
+    {
+        tamAL2=al_len(this2);
+        returnAux=1;
+        for(i=0;i<tamAL2;i++)
+        {
+            aux=al_contains(this,this2->pElements[i]);
+            if(aux==0||aux==-1)
+            {
+                returnAux=0;
+                break;
+            }
+        }
+    }
 
     return returnAux;
 }
@@ -471,7 +491,49 @@ int al_containsAll(ArrayList* this,ArrayList* this2)
  */
 int al_sort(ArrayList* this, int (*pFunc)(void* ,void*), int order)
 {
-    int returnAux = -1;
+    int returnAux=-1;
+    int tam;
+    int i,j;
+    int aux;
+    void* PunteroAux;
+    if(this!=NULL && pFunc!=NULL)
+    {
+        tam=al_len(this);
+        if(order==1)
+        {
+                for(i=0;i<tam-1;i++)
+                {
+                    for(j=i+1;j<tam;j++)
+                    {
+                        aux=pFunc(this->pElements[i], this->pElements[j]);
+                        if(aux==order)
+                        {
+                            PunteroAux=this->pElements[i];
+                            this->pElements[i]=this->pElements[j];
+                            this->pElements[j]=PunteroAux;
+                        }
+                    }
+                }
+                returnAux=0;
+        }
+        if(order==0)
+        {
+            for(i=0;i<tam-1;i++)
+            {
+                for(j=i+1;j<tam;j++)
+                {
+                    aux=pFunc(this->pElements[i],this->pElements[j]);
+                    if(aux<order)
+                    {
+                        PunteroAux=this->pElements[i];
+                        this->pElements[i]=this->pElements[j];
+                        this->pElements[j]=PunteroAux;
+                    }
+                }
+            }
+            returnAux=0;
+        }
+    }
 
     return returnAux;
 }
