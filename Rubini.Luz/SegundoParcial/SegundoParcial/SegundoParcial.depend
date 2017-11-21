@@ -1,0 +1,24 @@
+# depslib dependency file v1.0
+1511265623 source:d:\rubini.luz\segundoparcial\segundoparcial\arraylist.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"ArrayList.h"
+
+1511265623 d:\rubini.luz\segundoparcial\segundoparcial\arraylist.h
+
+1511268282 source:d:\rubini.luz\segundoparcial\segundoparcial\main.c
+	<stdio.h>
+	<stdlib.h>
+	"ArrayList.h"
+	"funciones.h"
+
+1511267789 d:\rubini.luz\segundoparcial\segundoparcial\funciones.h
+
+1511267823 source:d:\rubini.luz\segundoparcial\segundoparcial\funciones.c
+	<stdio.h>
+	<stdlib.h>
+	"ArrayList.h"
+	"funciones.h"
+	<string.h>
+
